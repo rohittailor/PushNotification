@@ -1,0 +1,41 @@
+{
+
+	"services":[
+        {
+            "name":"STG",
+            "service_url":"http://tailor.corp.adobe.com:3000/api",
+            "ims_url":"https://ims-na1-qa1.adobelogin.com/ims/",
+            "ims_profile_url":"https://ims-na1-qa1.adobelogin.com/ims/profile/v1",
+            "api_key":"l7xx3af2e130d4f84636a67f1b1878cc38cc",
+            "visible":"true",
+            "landing_domain":"https://helpx.stage.adobe.com",
+            "enableLog":"true",
+            "susi_url":"https://ims-na1-qa1.adobelogin.com/ims/authorize?response_type=token&ctx_id=esp_ctx&client_id=support_enterprise_portalTest2&scope=AdobeID,openid,gnav&locale=en&redirect_uri=http://tailor.corp.adobe.com:3000",
+            "logout_url":"https://adobeid-na1-qa1.services.adobe.com/ims/logout/v1/token"
+        },
+        {
+            "name":"DEV",
+            "service_url":"http://sj1slm725.corp.adobe.com:8080/products_support/customers",
+            "ims_url":"https://ims-na1-dev1.adobelogin.com/ims/",
+            "ims_profile_url":"https://ims-na1-dev1.adobelogin.com/ims/profile/v1",
+            "api_key":"l7xx3af2e130d4f84636a67f1b1878cc38cc",
+            "visible":"true",
+            "landing_domain":"https://helpx.stage.adobe.com",
+            "enableLog":"true",
+            "susi_url":"https://ims-na1-stg1.adobelogin.com/ims/authorize?response_type=token&ctx_id=esp_ctx&client_id=support_enterprise_portal2&scope=AdobeID,openid,gnav&locale=en&redirect_uri=http://sj1slm725.corp.adobe.com:7070/enterprise-portal-stg",
+            "logout_url":"https://adobeid-na1-stg1.services.adobe.com/ims/logout/v1/token"
+        },
+        {
+            "name":"PRD",
+            "service_url":"https://api-cna01.adobe-services.com/products_support/customers",
+            "ims_url":"https://ims-na1.adobelogin.com/ims/",
+            "ims_profile_url":"https://ims-na1.adobelogin.com/ims/profile/v1",
+            "api_key":"l7xx4af62519f44e47298d06b7e466eff185",
+            "visible":"true",
+            "landing_domain":"https://helpx.adobe.com",
+            "enableLog":"true",
+            "susi_url":"https://ims-na1-stg1.adobelogin.com/ims/authorize?response_type=token&ctx_id=esp_ctx&client_id=support_enterprise_portal2&scope=AdobeID,openid,gnav&locale=en&redirect_uri=http://sj1slm725.corp.adobe.com:7070/enterprise-portal-stg",
+            "logout_url":"https://adobeid-na1-stg1.services.adobe.com/ims/logout/v1/token"
+        }
+    ]
+}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hendrix Push Notification</title>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="js/libs/select2-3.2/select2.css"/>
+    <link rel="stylesheet" href="js/libs/angular-ui/angular-ui.css"/>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/libs/jquery-1.11.1.min.js"></script>
+    <script src="js/libs/underscore.js"></script>
+    <script src="js/angular-1.0.5/angular.min.js"></script>
+    <script src="js/angular-1.0.5/angular-local-storage.js"></script>
+    <script src="js/libs/select2-3.2/select2.js"></script>
+    <script src="js/libs/angular-ui/angular-ui.js"></script>
+
+    <script src="js/main.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/services.js"></script>
+    <script src="js/controllers.js"></script>
+    <script src="js/directives.js"></script>
+    <script src="js/filters.js"></script>
+
+</head>
+<body>
+    <nav class="navbar navbar-inverse" role="navigation" style="border-radius: 0">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">HDX5 Admin</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-9">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#/notification">Manage Notifications</a></li>
+                <li><a href="#">Manage Groups</a></li>
+                <li><a href="#">Manage Users</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+<div class="container">
+    <div ng-view></div>
+</div>
+</body>
+</html>
