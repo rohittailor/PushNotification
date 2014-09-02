@@ -1,5 +1,5 @@
 {
-  "name": "TestNode",
+  "name": "PushNiotification",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -13,6 +13,14 @@
     "body-parser": "~1.0.0",
     "debug": "~0.7.4",
     "jade": "~1.3.0",
-    "socket.io":"~1.0.6"
-  }
+    "socket.io": "~1.0.6"
+  },
+  "main": "app.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "no"
+  },
+  "author": "",
+  "license": "ISC"
 }

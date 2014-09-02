@@ -1,0 +1,15 @@
+<div style="margin-top: 15px;">
+    <div ng-repeat="message in source">
+        <div class="alert" style="padding: 10px;"
+             ng-class="{'alert-danger': message.error, 'alert-info': message.info, 'alert-warn': message.warning, 'alert-success': message.success}">
+            <button type="button" class="close" data-dismiss="alert" ng-click="onErrorRedirect(message.error)">&times;</button>
+            <strong>
+                <span ng-show="message.error">Error:</span>
+                <span ng-show="message.info">Info:</span>
+                <span ng-show="message.warning">Warning:</span>
+                <span ng-show="message.success">Success:</span>
+            </strong>
+            {{message.text}}
+        </div>
+    </div>
+</div>

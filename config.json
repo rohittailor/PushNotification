@@ -1,0 +1,10 @@
+{
+    "development": {
+        "databaseUrl": "mongodb://127.0.0.1:27017/test",
+        "imsURL": "ims-na1-stg1.adobelogin.com"
+    },
+    "production": {
+        "databaseUrl": "mongodb://127.0.0.1:27017/test",
+        "imsURL": "ims-na1-stg1.adobelogin.com"
+    }
+}

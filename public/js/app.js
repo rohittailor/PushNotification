@@ -11,7 +11,16 @@ app.config([
                 controller: 'NotificationCtrl',
                 title: 'Notification'
             })
-            .otherwise({
-                controller:'RedirectCtrl'
+            .when('/groups', {
+                templateUrl: 'partials/groups.html',
+                controller: 'GroupsCtrl',
+                title: 'Groups'
+            })
+            .when('/users', {
+                templateUrl: 'partials/users.html',
+                controller: 'UsersCtrl',
+                title: 'Users'
             });
+
+
     }]);

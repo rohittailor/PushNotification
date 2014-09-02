@@ -68,21 +68,8 @@ function validateToken() {
         window.location.href=SAW.models.serviceData.susi_url;
     });
 }
-var pushServerUrl="http://localhost:3000/";
-var socket = io(pushServerUrl);
-
-$(document).ready(function () {
-    $("input[name='rbMessageType']").change(function(){
-        if($(this).val()=='broadcast'){
-            messageType=0; // broadcast message
-            $('#groupPanel').hide();
-        }
-        else{
-            messageType=1; // send message to group
-            $('#groupPanel').show();
-        }
-    });
-});
+var pushServiceUrl="http://localhost:3000/";
+//var socket = io(pushServerUrl);
 
 var currentUser={
     id:"123456",
@@ -100,39 +87,7 @@ function countTotalUsers(data) {
     console.log(message);
 }
 
-var messageType = 0; // broadcast
-function sendMessage(){
-    if(messageType==0){
-        broadCastMessage();
-    }
-    else{
-        sendMessageToGroup()
-    }
-}
 
-function broadCastMessage(){
-    var messageObj = {
-        messageType:0, // 0 for broadcast
-        messageTitle:$('#txtMessageType').val(),
-        messageDescription:$('#txtMessageDescription').val(),
-        messageFrom:currentUser
-    };
-
-    socket.emit('AdminMessage',messageObj);
-}
-
-function sendMessageToGroup(){
-    var groupName = $('#ddGroup :selected').text();
-    var messageObj = {
-        messageType:1, // 0 for broadcast
-        messageTitle:$('#txtMessageType').val(),
-        messageDescription:$('#txtMessageDescription').val(),
-        messageFrom:currentUser,
-        groupName:groupName
-    };
-
-    socket.emit('AdminMessageToGroup',messageObj);
-}
 
 function logMessage(data){
     var msg = $('#log').val();
@@ -141,38 +96,3 @@ function logMessage(data){
 }
 
 
-//Socket Events
-socket.on('connect',function(){
-    console.log("Connected to push notification server");
-    socket.emit('add user', currentUser);
-});
-
-// Whenever the server emits 'login', log the login message
-socket.on('login', function (user) {
-    connected = true;
-    console.log(user.username+" logged-in to server, Connection ID is:"+user.userID);
-    countTotalUsers(user);
-});
-
-// Whenever the server emits 'new message', update the chat body
-socket.on('AdminMessageBroadCast', function (data) {
-    console.log(data);
-    var str= "Message Title: "+data.messageTitle+", Message Description: "+data.messageDescription;
-    logMessage(str);
-});
-
-socket.on('message', function (data) {
-    addChatMessage(data);
-});
-
-// Whenever the server emits 'user joined', log it in the chat body
-socket.on('user joined', function (data) {
-    console.log(data.username + ' joined, Connection ID is:'+data.userID);
-    countTotalUsers(data);
-});
-
-// Whenever the server emits 'user left', log it in the chat body
-socket.on('user left', function (data) {
-    console.log(data.username + ' left');
-    countTotalUsers(data);
-});

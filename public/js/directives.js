@@ -21,5 +21,19 @@ angular.module('hdxadmin.directive', [])
 
             }
         };
+    }])
+    .directive('ngMessages',[function ()
+    {
+        return {
+            restrict:'EA',
+            scope:{
+                source:'='
+            },
+            replace:true,
+            templateUrl:'partials/directive/messages.html',
+            link:function (scope, element, attrs)
+            {
+            }
+        }
     }]);
 

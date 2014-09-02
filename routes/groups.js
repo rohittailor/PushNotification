@@ -1,11 +1,14 @@
 var express = require('express');
+var fs= require('fs');
 var router = express.Router();
 var databaseUrl = "mongodb://127.0.0.1:27017/test"; // "username:password@example.com/mydb"
-var collections = ["groups","users"];
+var collections = ["groups","users","adminUsers"];
+
 var db = require("mongojs").connect(databaseUrl, collections);
-var fs= require('fs');
 
-
+db.on('error',function(err){
+    console.log("Database Connection Error");
+});
 
 router.get('/save',function(req,res){
     fs.writeFile("groups.json", JSON.stringify(groups), "utf8", function(err){
@@ -58,6 +61,8 @@ router.delete('/:groupName',function(req,res){
         }
         else{
             res.status(200).send({msg:'Group '+req.params.groupName+' deleted'});
+            //delete users with group
+            db.users.remove({groupName:req.params.groupName});
         }
         res.end();
     });
