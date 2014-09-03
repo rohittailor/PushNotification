@@ -9,6 +9,44 @@
     <link rel="stylesheet" href="js/libs/select2-3.2/select2.css"/>
     <link rel="stylesheet" href="js/libs/angular-ui/angular-ui.css"/>
 
+    <style type="text/css">
+        body{
+            font-family: adobe-clean,"Helvetica Neue",Helvetica,Arial,sans-serif !important;
+        }
+        .wait.center {
+            position: absolute!important;
+            top: 50%!important;
+            left: 50%!important;
+            margin-top: -.5rem!important;
+            margin-left: -.5rem!important;
+        }
+        .wait.large {
+            width: 3rem;
+            height: 3rem;
+            background-image: url('../img/wait_32.gif');
+            -webkit-animation: wait-large 1.6s step-end infinite;
+            animation: wait-large 1.6s step-end infinite;
+        }
+        .wait {
+            display: inline-block;
+            width: 3rem;
+            height: 3rem;
+            background: url('../img/wait_32.gif') no-repeat 0 0;
+            -webkit-background-size: auto 100%;
+            -moz-background-size: auto 100%;
+            -o-background-size: auto 100%;
+            background-size: auto 100%;
+            -webkit-background-size: auto 100% auto 100%;
+            -moz-background-size: auto 100% auto 100%;
+            background-size: auto 100% auto 100%;
+            -webkit-animation: wait 1.6s step-end infinite;
+            animation: wait 1.6s step-end infinite;
+        }
+        .starter-template {
+            width: 500px;
+            margin: 150px auto;
+        }
+    </style>
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/libs/jquery-1.11.1.min.js"></script>
     <script src="js/libs/underscore.js"></script>
@@ -17,32 +55,45 @@
     <script src="js/libs/select2-3.2/select2.js"></script>
     <script src="js/libs/angular-ui/angular-ui.js"></script>
     <script src="js/libs/bootstrap.min.js"></script>
-
-
     <script src="js/main.js"></script>
     <script src="js/app.js"></script>
     <script src="js/services.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/directives.js"></script>
     <script src="js/filters.js"></script>
-
+    <!--<script type="text/javascript" src="https://use.typekit.com/vze1tyc.js"></script>-->
+    <!--<script type="text/javascript">-->
+        <!--try {Typekit.load();}catch (e) {}-->
+    <!--</script>-->
 </head>
 <body ng-controller="MainCtrl">
-    <nav class="navbar navbar-inverse" role="navigation" style="border-radius: 0">
-    <div class="container-fluid">
+    <div id="content_wait_spinner" class="wait large center"></div>
+    <nav class="navbar navbar-inverse" role="navigation" style="border-radius: 0;border: none;display: none;" ng-show="$root.isLoggedIn">
+    <div style="position: absolute;"><img src="img/adb-logo.png"></div>
+    <div class="container-fluid" style="padding-left: 50px;">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">HDX5 Admin</a>
+           <a class="navbar-brand" href="#/notification" style="color:#00aaff;">HDX5 Admin</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-9">
             <ul class="nav navbar-nav">
-                <li ng-class="{active:isActive('/notification')}"><a href="#/notification">Manage Notifications</a></li>
+                <li ng-class="{active:isActive('/notifications')}"><a href="#/notifications">Manage Notifications</a></li>
                 <li ng-class="{active:isActive('/groups')}"><a href="#/groups">Manage Groups</a></li>
                 <li ng-class="{active:isActive('/users')}"><a href="#/users">Manage Users</a></li>
             </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li id="fat-menu" class="dropdown">
+                    <a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> {{username}} <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" ng-click="logout()">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+
         </div><!-- /.navbar-collapse -->
+
     </div><!-- /.container-fluid -->
 </nav>
 <div class="container">

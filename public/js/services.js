@@ -76,6 +76,60 @@ angular.module('hdxadmin.services', [])
                 data:data
             })
         };
+        //load all users
+        service.getAllUsers = function (groupName) {
+            var serviceURL;
+            serviceURL=baseUrl.getServiceUrl()+'/users?accessToken='+SAW.session.accessToken;
+            return $http({
+                method:'GET',
+                url:serviceURL
+            })
+        };
+        //load users
+        service.getUsers = function (groupName) {
+            var serviceURL;
+            serviceURL=baseUrl.getServiceUrl()+'/groups/'+groupName+'/users?accessToken='+SAW.session.accessToken;
+            return $http({
+                method:'GET',
+                url:serviceURL
+            })
+        };
+        //add user
+        service.addUser= function(groupName,data) {
+            var serviceURL;
+            serviceURL=baseUrl.getServiceUrl()+'/groups/'+groupName+'/users?accessToken='+SAW.session.accessToken;
+            return $http({
+                method:'POST',
+                url:serviceURL,
+                headers:{
+                    'Content-Type':'application/x-www-form-urlencoded'
+                },
+                transformRequest:transform,
+                data:data
+            })
+        };
+        //remove User from specific group
+        service.removeUser= function (groupName,userID) {
+            var serviceURL;
+            serviceURL=baseUrl.getServiceUrl()+'/groups/'+groupName+'/users/'+userID+'?accessToken='+SAW.session.accessToken;
+            return $http({
+                method:'DELETE',
+                url:serviceURL
+            })
+        };
+        //remove User from all groups
+        service.removeUserFromAll= function (userID) {
+            var serviceURL;
+            serviceURL=baseUrl.getServiceUrl()+'/users/'+userID+'?accessToken='+SAW.session.accessToken;
+            return $http({
+                method:'DELETE',
+                url:serviceURL
+            })
+        };
+        //logout service
+        service.logout = function(){
+            return $http.jsonp(SAW.models.serviceData.logout_url + "?auth_token=" + SAW.session.accessToken+ '&callback=JSON_CALLBACK');
+        }
         return service;
     }]);
 

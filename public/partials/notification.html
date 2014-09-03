@@ -1,13 +1,14 @@
 <div class="page-header">
 <h3><span class="glyphicon glyphicon-globe"></span> Manage Notifications</h3>
 </div>
+<ng-messages source="customer.messages"></ng-messages>
 <div class="form-group">
     <label for="txtMessageType">Message Title</label>
     <input type="text" class="form-control" id="txtMessageType" ng-model="msgTitle" placeholder="Enter message title">
 </div>
 <div class="form-group">
     <label for="txtMessageDescription">Message Description</label>
-    <textarea class="form-control" id="txtMessageDescription" ng-model="msgDescription" placeholder="Enter message description"></textarea>
+    <textarea class="form-control" style="height: 150px;" id="txtMessageDescription" ng-model="msgDescription" placeholder="Enter message description"></textarea>
 </div>
 <div class="radio">
     <label>

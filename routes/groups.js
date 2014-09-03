@@ -1,14 +1,6 @@
 var express = require('express');
 var fs= require('fs');
 var router = express.Router();
-var databaseUrl = "mongodb://127.0.0.1:27017/test"; // "username:password@example.com/mydb"
-var collections = ["groups","users","adminUsers"];
-
-var db = require("mongojs").connect(databaseUrl, collections);
-
-db.on('error',function(err){
-    console.log("Database Connection Error");
-});
 
 router.get('/save',function(req,res){
     fs.writeFile("groups.json", JSON.stringify(groups), "utf8", function(err){
@@ -19,6 +11,7 @@ router.get('/save',function(req,res){
 });
 
 router.post('/',function(req,res){
+    var db=req.db;
     //check if group already exists
     db.groups.find({name:req.body.name},function(err,group){
         if(err || !group || group.length<1){
@@ -42,6 +35,7 @@ router.post('/',function(req,res){
 });
 
 router.get('/',function(req,res){
+    var db=req.db;
     db.groups.find({},function(err,groups){
         if(err || !groups){
             res.status(500).send({error:'Groups not retrived from DB'});
@@ -55,6 +49,7 @@ router.get('/',function(req,res){
 });
 
 router.delete('/:groupName',function(req,res){
+    var db=req.db;
     db.groups.remove({name:req.params.groupName},function(err,group){
         if(err || !group || group.n<1){
             res.status(500).send({error:'Group not exist'});
@@ -68,6 +63,7 @@ router.delete('/:groupName',function(req,res){
     });
 });
 router.get('/:groupName/users',function(req,res){
+    var db=req.db;
     //check group exist or not
     db.groups.findOne({name:req.params.groupName},function(err,group) {
         if (group) {
@@ -90,6 +86,7 @@ router.get('/:groupName/users',function(req,res){
 
 });
 router.post('/:groupName/users',function(req,res){
+    var db=req.db;
     var userObj={
         email:req.body.email,
         userID:req.body.userID,
@@ -129,6 +126,7 @@ router.post('/:groupName/users',function(req,res){
     });
 });
 router.delete('/:groupName/users/:userID',function(req,res){
+    var db=req.db;
     var userObj={
         userID:req.params.userID,
         groupName:req.params.groupName
@@ -139,7 +137,7 @@ router.delete('/:groupName/users/:userID',function(req,res){
             db.users.findOne({userID:userObj.userID,groupName:userObj.groupName},function(err,user) {
                 if (user) {
                     //user exist in group, remove user
-                    db.users.remove({userID:userObj.userID},function(err,removed){
+                    db.users.remove({userID:userObj.userID,groupName:userObj.groupName},function(err,removed){
                         if(removed){
                             res.status(200).send({msg:'User '+userObj.userID+' deleted'});
                         }

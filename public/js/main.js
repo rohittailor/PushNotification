@@ -19,7 +19,6 @@ angular.element(document).ready(function () {
 function parseURL() {
     var hashParams = decodeURIComponent(window.location.hash), params = {};
     if (hashParams) {
-
         _.map(hashParams.replace('#', '').replace('?', '&').replace('/', '=').split('&'), function (pair) {
             var kv = pair.split('=');
             if (kv.length === 2) {
@@ -48,7 +47,7 @@ function validateToken() {
     }
     $.ajax({
         dataType: "jsonp",
-        url: serviceData.ims_profile_url + "?bearer_token=" + SAW.session.accessToken
+        url: serviceData.ims_url + "profile/v1?bearer_token=" + SAW.session.accessToken
     }).done(function (response) {
         if (!response.error_flag) {
            var sUserID = response.userId.split('@')[0];
@@ -57,7 +56,7 @@ function validateToken() {
             SAW.models.user.customerID = SAW.session.customerID;
             //Bootstrap angular after loading service related data
             angular.bootstrap(document,['hdxadmin']);
-            window.location.href='#/notification';
+            window.location.href='#/notifications';
         }
         else {
             console.log("IMS token validation failed: " + response.error_description);

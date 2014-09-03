@@ -1,0 +1,87 @@
+<div class="page-header">
+<h3><span class="glyphicon glyphicon-user"></span> Manage Users</h3>
+</div>
+
+<!-- Nav tabs -->
+<ul id="myTab" class="nav nav-tabs" role="tablist">
+    <li class="active"><a href="#addUserPanel" role="tab" data-toggle="tab">Add User</a></li>
+    <li><a href="#removeUserPanel" role="tab" data-toggle="tab">Remove User from all Groups</a></li>
+    <li><a href="#removeUserGroupPanel" role="tab" data-toggle="tab">Remove User from a Group</a></li>
+</ul>
+<ng-messages source="customer.messages"></ng-messages>
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane active" id="addUserPanel">
+        <form id="addUserForm">
+        <div class="form-group">
+            <label for="groupList">Select Group</label>
+            <div>
+                <select ui-select2="{placeholder:'Select Group',allowClear:true}" data-placeholder="Select Group" style="width: 250px;"
+                        id="groupList"
+                        ng-model="selectedGroup">
+                    <option value=""></option>
+                    <option ng-repeat="group in groups" value="{{ group.name }}">{{ group.name }}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="txtUserID">UserID/Username</label>
+            <input type="text" class="form-control" id="txtUserID" ng-model="userID" placeholder="Enter username/userid">
+        </div>
+        <button class="btn btn-primary" data-loading-text="Adding User..." ng-disabled="!isFormValid()" ng-click="AddUser($event);">Add User</button>
+        </form>
+    </div>
+
+    <div class="tab-pane" id="removeUserPanel">
+        <form id="removeUserForm">
+            <!--<div class="alert alert-warning">User will be removed from all groups</div>-->
+            <div class="form-group">
+                <label for="groupList">Select User</label>
+                <div>
+                    <select ui-select2="{placeholder:'Select User',allowClear:true}" style="width: 250px;"
+                            id="userList"
+                            ng-model="userToRemove">
+                        <option value=""></option>
+                        <option ng-repeat="user in allUsers" value="{{ user.userID }}">{{user.userID}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" ng-disabled="!isRemoveUserAllValid()" ng-click="removeUserFromAll()">Remove User</button>
+        </form>
+    </div>
+
+    <div class="tab-pane" id="removeUserGroupPanel">
+        <form id="removeUserGroupForm">
+        <div class="form-group">
+            <label for="groupList">Select Group</label>
+            <div>
+                <select ui-select2="{placeholder:'Select Group',allowClear:true}" ng-change="loadUsers()" data-placeholder="Select Group" style="width: 250px;"
+                        id="groupNameList"
+                        ng-model="selectedGroupName">
+                    <option value=""></option>
+                    <option ng-repeat="group in groups" value="{{ group.name }}">{{ group.name }}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group" ng-show="isUsersLoaded">
+            <label for="groupList">Select User</label>
+            <div>
+                <select ui-select2="{placeholder:'Select User',allowClear:true}" style="width: 250px;"
+                        id="groupNameList"
+                        ng-model="selectedUser">
+                    <option value=""></option>
+                    <option ng-repeat="user in users" value="{{ user.userID }}">{{user.userID}}</option>
+                </select>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" data-loading-text="Removing User..." ng-disabled="!isRemoveDataValid()" ng-click="removeUser($event)">Remove User</button>
+        </form>
+    </div>
+
+
+</div>
+
+
+

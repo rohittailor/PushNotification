@@ -10,6 +10,7 @@ var http = require('http');
 var https = require('https');
 var port = process.env.PORT || 3000;
 var groups= require('./routes/groups');
+var users= require('./routes/users');
 var collections = ["groups","users","adminUsers"];
 
 var credentials = {
@@ -32,11 +33,14 @@ httpsServer.listen(433, function () {
 var io = require('socket.io')(httpServer);
 
 //configuration file
-//var config = require('./config.json')[app.get('env')];
+var env= process.env.Node_ENV || 'stage';
+app.set('env',env);
+var config = require('./config.json')[app.get('env')];
 
 //for mongo DBa
-var databaseUrl = "mongodb://127.0.0.1:27017/test";
-var imsURL= "ims-na1-qa1.adobelogin.com";
+var databaseUrl = config.databaseUrl;
+var imsURL= config.imsURL;
+console.log("Configuration",config);
 
 var db = require("mongojs").connect(databaseUrl, collections);
 db.on('connect',function(db){
@@ -56,6 +60,18 @@ app.use(bodyParser.urlencoded({
 
 //request interceptor for api
 app.all('/api/*',function(req, res, next) {
+    //assign db object to req so that db will be available in router also
+    req.db = db;
+    //enable CORS
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, *');
+
+    // intercept OPTIONS method
+    if ('OPTIONS' == req.method) {
+        res.send(200);
+        res.end();
+    }
     // validate token here
     if(typeof req.query.accessToken==="undefined"){
         res.status(401).send();
@@ -76,11 +92,11 @@ app.all('/api/*',function(req, res, next) {
 
         response.on('end', function (data) {
             if(str!=""){
-                console.log('User Info ' + str);
+                //console.log('User Info ' + str);
                 var userInfo = JSON.parse(str);
                 if(!userInfo.error_flag) {
-                    var userGUID = userInfo.userId.split('@')[0];
-                    db.adminUsers.findOne({userID:userGUID},function(err,adminUser){
+                    var userEmail = userInfo.email;
+                    db.adminUsers.findOne({email:userEmail},function(err,adminUser){
                         if(err){
                             console.log(err);
                             throw err;
@@ -118,6 +134,7 @@ app.all('/api/*',function(req, res, next) {
     });
 });
 app.use('/api/groups', groups);
+app.use('/api/users', users);
 
 //error handler
 app.use(function(err, req, res, next) {
@@ -132,9 +149,6 @@ app.use(function(err, req, res, next) {
 // usernames which are currently connected to the chat
 var usernames = {};
 var numUsers = 0;
-
-var adminUsers=[];
-adminUsers.push({id:'13CB026E50B4F9430A0574CB',name:'Arnaud Fischer',email:'arnaudf+uss2@adobe.com'});
 
 function joinGroup(socket,currentUser){
     try {
@@ -157,7 +171,7 @@ function joinGroup(socket,currentUser){
         console.log("Error in joining group",error);
     }
 }
-
+io.set('origins','*:*' );
 io.sockets.on('connection', function (socket) {
     var addedUser = false;
     console.log("Socket ID: "+socket.id);
@@ -173,50 +187,64 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('AdminMessage',function(data){
-        console.log("AdminMessage",data);
+        console.log("AdminMessage Sent");
+        console.log("-----------------");
         socket.broadcast.emit('AdminMessageBroadCast', data);
     });
     socket.on('AdminMessageToGroup',function(data){
-        console.log("AdminMessage To Group: "+data.groupName,data);
+        console.log("AdminMessage To Sent to Group "+data.groupName);
+        console.log("-----------------------------------------------");
         socket.broadcast.to(data.groupName).emit('AdminMessageBroadCast', data);
-        //socket.broadcast.emit('AdminMessageBroadCast', data);
     });
 
     // when the client emits 'add user', this listens and executes
     socket.on('add user', function (user) {
-        // we store the username in the socket session for this client
-        socket.username = user.username;
-        console.log(user.username+ " connected");
-        // add the client's username to the global list
-        usernames[user.username] = user;
-        ++numUsers;
-        addedUser = true;
+         // we store the username in the socket session for this client
+        socket.userID = user.userID;
         joinGroup(socket,user);
-//        socket.emit('login', {
-//            username:socket.username,
-//            userID:socket.id,
-//            numUsers: numUsers
-//        });
         // echo globally (all clients) that a person has connected
         socket.broadcast.emit('user joined', {
-            username: socket.username,
             userID: socket.id,
             numUsers: numUsers
         });
     });
+    //admin will send 'UsersUpdated' when change any user or group
+    socket.on('UsersUpdated',function(user){
+        console.log("Users and Groups updated by Admin");
+        socket.broadcast.emit('UserUpdated',user);
+    });
+    //admin will send 'UserRemovedFromGroup' when user removed from group
+    socket.on('UserRemovedFromGroup',function(data){
+        socket.broadcast.emit('UserRemovedFromGroup',data);
+    });
+    //admin will send 'UserRemovedFromAll' when user removed from all groups
+    socket.on('UserRemovedFromAll',function(data){
+        socket.broadcast.emit('UserRemovedFromAll',data);
+    });
 
-
-
+    //client app will send 'RemoveUserFromGroup' when user removed from group using 'UserRemovedFromGroup'
+    socket.on('RemoveUserFromGroup',function(data){
+        socket.leave(data.groupName);
+    });
+    //client app will send 'RemoveUserFromAllGroup' when user removed from group using 'UserRemovedFromAll'
+    socket.on('RemoveUserFromAllGroup',function(data){
+        db.users.find({userID:data.userID},function(err,userList){
+            if(!err && userList.length>0){
+                for(var i=0;i<userList.length;i++)
+                socket.leave(userList[i].groupName);
+            }
+        });
+    });
     // when the user disconnects.. perform this
     socket.on('disconnect', function () {
         // remove the username from global usernames list
         if (addedUser) {
-            delete usernames[socket.username];
+            delete usernames[socket.userID];
             --numUsers;
 
             // echo globally that this client has left
             socket.broadcast.emit('user left', {
-                username: socket.username,
+                userID: socket.userID,
                 numUsers: numUsers
             });
         }
