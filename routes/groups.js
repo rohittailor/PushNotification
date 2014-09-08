@@ -35,17 +35,22 @@ router.post('/',function(req,res){
 });
 
 router.get('/',function(req,res){
-    var db=req.db;
-    db.groups.find({},function(err,groups){
-        if(err || !groups){
-            res.status(500).send({error:'Groups not retrived from DB'});
-        }
-        else{
-            res.set('Content-Type', 'application/json');
-            res.send(groups);
-        }
-        res.end();
-    });
+    try{
+        var db=req.db;
+        db.groups.find({},function(err,groups){
+            if(err || !groups){
+                res.status(500).send({error:'Groups not retrived from DB'});
+            }
+            else{
+                res.set('Content-Type', 'application/json');
+                res.send(groups);
+            }
+            res.end();
+        });
+    }
+    catch(error){
+        console.log("Error in loading groups "+error);
+    }
 });
 
 router.delete('/:groupName',function(req,res){

@@ -13,13 +13,17 @@ angular.module('hdxadmin.services', [])
     .factory('baseUrl',function(){
         return {
             getServiceUrl:function(){
-                return serviceData.service_url;
+                return serviceData.service_url+'api';
             }
         }
 
     })
     .factory('socket',['$rootScope',function ($rootScope) {
-        var socket = io.connect(pushServiceUrl);
+        //Node.js server URL is SAW.models.serviceData.service_url loaded using config.json
+        //For Secure connection
+        //var socket = io.connect('https://localhost', {secure: true});
+        //var socket = io.connect('https://localhost:3210/', { agent: https.globalAgent });
+        var socket = io.connect(SAW.models.serviceData.service_url);
         return {
             on: function (eventName, callback) {
                 socket.on(eventName, function () {

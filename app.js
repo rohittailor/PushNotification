@@ -16,26 +16,37 @@ var collections = ["groups","users","adminUsers"];
 var credentials = {
     key: fs.readFileSync('./cert/privatekey.pem'),
     cert: fs.readFileSync('./cert/certificate.pem')
+    //pfx: fs.readFileSync('server.pfx')
 };
+
+https.globalAgent.options.rejectUnauthorized = false;
+
 var httpServer = http.createServer(app);
 var httpsServer = https.createServer(credentials, app);
 
-httpServer.listen(port, function () {
-    console.log('HTTP Server listening at port %d', port);
-    console.log("Push Notification Service Started for "+process.env.NODE_ENV);
-});
-
-httpsServer.listen(433, function () {
-    console.log('HTTPs Server listening at port %d', 433);
-    console.log("Push Notification Service Started for "+process.env.NODE_ENV);
-});
-
-var io = require('socket.io')(httpServer);
-
 //configuration file
-var env= process.env.Node_ENV || 'stage';
+var env= process.env.NODE_ENV || 'qa';
 app.set('env',env);
 var config = require('./config.json')[app.get('env')];
+
+console.log("process.env.NODE_ENV :"+process.env.NODE_ENV);
+httpServer.listen(port, function () {
+    console.log('HTTP Server listening at port %d', port);
+    console.log("Push Notification Service Started for "+app.get('env'));
+});
+
+httpsServer.listen(443, function () {
+    console.log('HTTPs Server listening at port %d', 443);
+    console.log("Push Notification Service Started for "+app.get('env'));
+});
+
+var io = require('socket.io')(httpsServer);
+
+process.on('uncaughtException', function (err) {
+    console.log('Caught exception: ' + err);
+});
+
+
 
 //for mongo DBa
 var databaseUrl = config.databaseUrl;
@@ -43,6 +54,7 @@ var imsURL= config.imsURL;
 console.log("Configuration",config);
 
 var db = require("mongojs").connect(databaseUrl, collections);
+
 db.on('connect',function(db){
     console.log("Database Connected");
 });
@@ -98,6 +110,8 @@ app.all('/api/*',function(req, res, next) {
                     var userEmail = userInfo.email;
                     db.adminUsers.findOne({email:userEmail},function(err,adminUser){
                         if(err){
+                            res.status(500).send({error:'Failed to connect with Database'});
+                            res.end();
                             console.log(err);
                             throw err;
                         }

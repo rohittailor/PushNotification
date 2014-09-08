@@ -3,16 +3,16 @@
 	"services":[
         {
             "name":"QA",
-            "service_url":"http://tailor.corp.adobe.com:3000/api",
+            "service_url":"https://tailor.corp.adobe.com/",
             "ims_url":"https://ims-na1-qa1.adobelogin.com/ims/",
-            "susi_url":"https://ims-na1-qa1.adobelogin.com/ims/authorize?response_type=token&ctx_id=esp_ctx&client_id=support_enterprise_portalTest2&scope=AdobeID,openid,gnav&locale=en&redirect_uri=http://tailor.corp.adobe.com:3000",
+            "susi_url":"https://ims-na1-qa1.adobelogin.com/ims/authorize?response_type=token&ctx_id=esp_ctx&client_id=support_enterprise_portalTest2&scope=AdobeID,openid,gnav&locale=en&redirect_uri=https://tailor.corp.adobe.com",
             "logout_url":"https://adobeid-na1-qa1.services.adobe.com/ims/logout/v1/token"
         },
         {
             "name":"STG",
-            "service_url":"http://tailor.corp.adobe.com:3000/api",
+            "service_url":"https://tailor.corp.adobe.com:3000/api",
             "ims_url":"https://ims-na1-stg1.adobelogin.com/ims/",
-            "susi_url":"https://ims-na1-qa1.adobelogin.com/ims/authorize?response_type=token&ctx_id=esp_ctx&client_id=support_enterprise_portalTest2&scope=AdobeID,openid,gnav&locale=en&redirect_uri=http://tailor.corp.adobe.com:3000",
+            "susi_url":"https://ims-na1-qa1.adobelogin.com/ims/authorize?response_type=token&ctx_id=esp_ctx&client_id=support_enterprise_portalTest2&scope=AdobeID,openid,gnav&locale=en&redirect_uri=https://tailor.corp.adobe.com:3000",
             "logout_url":"https://adobeid-na1-stg1.services.adobe.com/ims/logout/v1/token"
         },
         {
